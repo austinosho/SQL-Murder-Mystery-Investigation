@@ -30,4 +30,28 @@ WHERE membership_id
 LIKE '48Z%' AND check_in_date LIKE '%0109'
 
 -- With the details we have been able to streamline, we will try to get more details on the two suspects we have and match it with other details since we know the member is a gold member and has a plate_number with "H42W".included.
+SELECT * 
+FROM get_fit_now_member 
+WHERE membership_status = 'gold' AND id LIKE '48Z%'    
+
+-- Now we have the person_id for both suspects and can match it to the license_id
+SELECT id as license_id 
+FROM drivers_license 
+WHERE plate_number like '%H42W%';
+
+SELECT * 
+FROM person 
+WHERE license_id in ('183779', '423327', '664760') 
+AND id in ('28819', '67318');
+
+-- Now we know Jeremy is the murderer and to see his full details we use:
+SELECT * 
+FROM drivers_license 
+WHERE id = '423327'
+
+-- Check your solution
+INSERT INTO solution VALUES (1, 'Jeremy Bowers');
+   SELECT value FROM solution;
+
+-- Congrats, you found the murderer! But wait, there's more... If you think you're up for a challenge, try querying the interview transcript of the murderer to find the real villain behind this crime. If you feel especially confident in your SQL skills, try to complete this final step with no more than 2 queries. Use this same INSERT statement with your new suspect to check your answer.
 
