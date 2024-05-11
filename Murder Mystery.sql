@@ -30,28 +30,39 @@ WHERE membership_id
 LIKE '48Z%' AND check_in_date LIKE '%0109'
 
 -- With the details we have been able to streamline, we will try to get more details on the two suspects we have and match it with other details since we know the member is a gold member and has a plate_number with "H42W".included.
-SELECT * 
-FROM get_fit_now_member 
-WHERE membership_status = 'gold' AND id LIKE '48Z%'    
 
--- Now we have the person_id for both suspects and can match it to the license_id
-SELECT id as license_id 
-FROM drivers_license 
-WHERE plate_number like '%H42W%';
+-- To solve this new challenge we will have to read Jeremy’s transcript from the interview.
 
 SELECT * 
-FROM person 
-WHERE license_id in ('183779', '423327', '664760') 
-AND id in ('28819', '67318');
+FROM interview 
+WHERE person_id = '67318'
 
--- Now we know Jeremy is the murderer and to see his full details we use:
-SELECT * 
-FROM drivers_license 
-WHERE id = '423327'
+-- To find the exact person in one query, we use; 
+SELECT 
+  d.*, 
+  p.id, 
+  p.name 
+FROM drivers_license AS d
+  LEFT JOIN person AS p ON d.id = p.license_id
+  LEFT JOIN facebook_event_checkin AS f ON p.id = f.person_id
+WHERE height BETWEEN '65' AND '67'
+    AND hair_color = 'red' 
+    AND car_model = 'Model S'
+    AND gender = 'female'
+    AND f.event_name = 'SQL Symphony Concert'
+    AND f.date like '201712%'
+GROUP BY 
+  d.id, p.id, p.name
+HAVING COUNT(f.person_id) = 3;
 
 -- Check your solution
-INSERT INTO solution VALUES (1, 'Jeremy Bowers');
-   SELECT value FROM solution;
+INSERT INTO solution VALUES (1, 'Miranda Priestly');
+ SELECT value FROM solution;
 
--- Congrats, you found the murderer! But wait, there's more... If you think you're up for a challenge, try querying the interview transcript of the murderer to find the real villain behind this crime. If you feel especially confident in your SQL skills, try to complete this final step with no more than 2 queries. Use this same INSERT statement with your new suspect to check your answer.
+-- Congrats, you found the brains behind the murder! Everyone in SQL City hails you as the greatest SQL detective of all time. Time to break out the champagne!
+
+-- OUR MAIN CULPRIT IS MIRANDA PRIESTLY SUCCESSFULLY GOTTEN IN TWO QUERIES
+              
+
+
 
